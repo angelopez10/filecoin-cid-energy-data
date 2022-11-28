@@ -1,11 +1,26 @@
-import React from "react";
-import { CidAPI } from "./api/cid";
+import React, { useState } from "react";
+import { ThemeProvider } from "styled-components";
+
+import Topbar from "./components/layout/Topbar";
+import MainLayout from "./containers/MainLayout";
+import { darkTheme } from "./theme/darkTheme";
+import { GlobalStyle } from "./theme/GlobalStyles";
+import { lightTheme } from "./theme/lightTheme";
 
 function App() {
-  CidAPI.get(
-    "bafybeihrfvw2onvcosl4psa7qgmr563amxpdqu2ze6xx6uwp5hlafr3qpq"
-  ).then((res) => console.log(res));
-  return <div>Hola Buenas!</div>;
+  const [theme, setTheme] = useState<"light" | "dark">("light");
+
+  const toggleTheme = () => {
+    theme === "light" ? setTheme("dark") : setTheme("light");
+  };
+
+  return (
+    <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
+      <GlobalStyle />
+      <Topbar theme={theme} toggleTheme={toggleTheme} />
+      <MainLayout />
+    </ThemeProvider>
+  );
 }
 
 export default App;
