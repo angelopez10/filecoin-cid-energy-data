@@ -94,9 +94,12 @@ export const Input = styled.input`
   border: 1px solid rgb(60, 63, 68);
   border-radius: 4px;
   font-size: 13px;
-  color: rgb(247, 248, 248);
+  color: ${({
+    theme: {
+      colors: { font },
+    },
+  }) => font};
   height: 40px;
-  appearance: none;
   transition: border 0.15s ease 0s;
   margin-right: 20px;
   :focus {
