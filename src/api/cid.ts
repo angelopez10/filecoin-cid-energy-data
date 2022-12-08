@@ -13,6 +13,8 @@ export class CidAPI {
 		});
     const miners = data?.MultihashResults[0]?.ProviderResults.map(({Provider}:any)=>({peerId:Provider.ID,addresses:Provider.Addrs}))
     // get miner id by peer id https://green.filecoin.space/minerid-peerid/api/v1/miner-id?peer_id=QmQzqxhK82kAmKvARFZSkUVS6fo9sySaiogAnx5EnZ6ZmC
+    const {data:{providerLocations}} = await axios.get('https://provider-quest.s3.us-west-2.amazonaws.com/dist/geoip-lookups/synthetic-locations-latest.json')
+    console.log({providerLocations})
     for(const index in miners ){
       const { data } = await axios.get(`https://green.filecoin.space/minerid-peerid/api/v1/miner-id?peer_id=${miners[index].peerId}`, {
         headers: {
@@ -21,8 +23,9 @@ export class CidAPI {
           Connection: 'keep-alive',
         },
       });
-      console.log({data})
-      miners[index] = {...miners[index],minerId:data[0].MinerId,...data[0] || {}}
+      if(data[0]){
+        miners[index] = {...miners[index],minerId:data[0].MinerId,...data[0] }
+      }
     }
     console.log({miners})
 		return miners;
