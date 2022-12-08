@@ -24,7 +24,9 @@ export class CidAPI {
         },
       });
       if(data[0]){
-        miners[index] = {...miners[index],minerId:data[0].MinerId,...data[0] }
+        const minerId = data[0].MinerId
+        const geolocation = providerLocations.find(({provider}:any)=>provider === minerId)
+        miners[index] = {...miners[index],minerId,...data[0],...(geolocation||{}) }
       }
     }
     console.log({miners})
