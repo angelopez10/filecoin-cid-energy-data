@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { CidAPI } from "../../../api/cid";
+import { ChangeEvent } from "react";
 import { Button } from "../../common/Button/Button";
 import {
   LogoCid,
@@ -16,21 +15,16 @@ import {
 interface TopbarProps {
   theme: "light" | "dark";
   toggleTheme: () => void;
+  setCid: (cid: string) =>  void;
+  handleSubmit: () => void;
+  setError: (error?: string) => void;
+  error?: string;
 }
 
-function Topbar({ theme, toggleTheme }: TopbarProps) {
-  const [cid, setCid] = useState("");
-
-  const handleChange = (e: any) => {
+function Topbar({ theme, toggleTheme, setCid, handleSubmit, setError, error }: TopbarProps) {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setCid(e.target.value);
-  };
-
-  const handleSubmit = () => {
-    CidAPI.get(
-      cid
-    ).then((res) => {
-      //do something
-    });
+    if(error) setError('');
   };
 
   return (

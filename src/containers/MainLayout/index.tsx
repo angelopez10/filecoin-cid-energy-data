@@ -1,12 +1,19 @@
-import React from "react";
-
 import { Wrapper } from "../../components/layout/Wrapper";
-import { LeftContainer, MainLayoutContainer } from "./MainLayout.styles";
+import { MainLayoutContainer } from "./MainLayout.styles";
+import { Content } from '../Content';
 
-function MainLayout() {
+interface MainLayoutProps {
+  error?: string;
+  data?: any;
+}
+
+function MainLayout({error, data = true}: MainLayoutProps) {
   return (
     <Wrapper>
-      <MainLayoutContainer></MainLayoutContainer>
+      <MainLayoutContainer centeredContent={!!error}>
+        {error && <h1>{error}</h1>}
+        {data &&  <Content />}
+      </MainLayoutContainer>
     </Wrapper>
   );
 }
