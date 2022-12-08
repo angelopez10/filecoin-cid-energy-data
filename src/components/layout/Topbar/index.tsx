@@ -27,8 +27,10 @@ function Topbar({ theme, toggleTheme }: TopbarProps) {
 
   const handleSubmit = () => {
     CidAPI.get(
-      "bafybeihrfvw2onvcosl4psa7qgmr563amxpdqu2ze6xx6uwp5hlafr3qpq"
-    ).then((res) => console.log(res));
+      cid
+    ).then((res) => {
+      //do something
+    });
   };
 
   return (
