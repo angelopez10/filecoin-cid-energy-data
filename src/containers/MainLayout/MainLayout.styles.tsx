@@ -1,11 +1,14 @@
 import styled from "styled-components";
 
-export const MainLayoutContainer = styled.div`
+export const MainLayoutContainer = styled.div<{centeredContent?: boolean}>`
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  ${({centeredContent}) => centeredContent && `
+    justify-content: center;
+  `};
 `;
 
 export const LeftContainer = styled.div`
