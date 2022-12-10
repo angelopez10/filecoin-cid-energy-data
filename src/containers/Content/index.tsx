@@ -5,7 +5,7 @@ import Map from "../../components/layout/Map";
 
 export type ActiveTabsType = "list" | "map";
 
-export function Content() {
+export function Content({ data }: any) {
   const [active, setActive] = useState<ActiveTabsType>("list");
 
   function toggleTab(tab: ActiveTabsType) {
@@ -15,7 +15,7 @@ export function Content() {
   return (
     <Container>
       <Tab active={active} toggleTab={toggleTab} />
-      {active === "map" && <Map />}
+      {active === "map" && <Map data={data} />}
     </Container>
   );
 }
