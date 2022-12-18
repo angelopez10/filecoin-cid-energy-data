@@ -24,7 +24,7 @@ export class CidAPI {
     } = await axios.get(
       "https://provider-quest.s3.us-west-2.amazonaws.com/dist/geoip-lookups/synthetic-locations-latest.json"
     );
-    console.log({ providerLocations });
+
     for (const index in miners) {
       const { data } = await axios.get(
         `https://green.filecoin.space/minerid-peerid/api/v1/miner-id?peer_id=${miners[index].peerId}`,
@@ -81,7 +81,7 @@ export class CidAPI {
         const {
           data: { contracts },
         } = await axios.get(
-          `https://proofs-api.zerolabs.green/api/partners/filecoin/nodes/f01234/contracts`,
+          `https://proofs-api.zerolabs.green/api/partners/filecoin/nodes/${miners[index].MinerId}/contracts`,
           {
             headers: {
               "Accept-Language": "en-US,en;q=0.5",
@@ -91,8 +91,52 @@ export class CidAPI {
           }
         );
         if (contracts[0]) {
-          console.log(contracts);
+          const purchasesByEnergySource = contracts.reduce(
+            (
+              output: { [x: string]: number },
+              current: { [x: string]: any }
+            ) => {
+              let key = current.purchases[0]?.certificate.energySource;
+              if (output[key]) {
+                output[key] += 1;
+              } else if (key) {
+                output[key] = 1;
+              }
+
+              return output;
+            },
+            {}
+          );
+
+          miners[index] = {
+            ...miners[index],
+            purchasesByEnergySource,
+          };
         }
+
+        const {
+          data: { data: data },
+        } = await axios.get(
+          `https://api.filecoin.energy/models/model?end=2022-12-06&filter=month&id=7&miner=${miners[index].MinerId}&start=2020-01-01`,
+          {
+            headers: {
+              "Accept-Language": "en-US,en;q=0.5",
+              "Accept-Encoding": "gzip, deflate, br",
+              Connection: "keep-alive",
+            },
+          }
+        );
+
+        const totalDataStored = data[0].data.reduce(
+          (acc: any, current: { value: any }) => {
+            return acc + Number(current.value);
+          },
+          0
+        );
+        miners[index] = {
+          ...miners[index],
+          totalDataStored,
+        };
       }
     }
     return miners;
