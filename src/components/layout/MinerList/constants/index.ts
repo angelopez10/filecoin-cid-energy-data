@@ -1,0 +1,2 @@
+export const listHeaders = ['Miner ID', 'Total Data Stored', 'Country', 'City', 'Higher Bound (KW)', 'Lower Bound (KW)', 'Estimate (KW)',
+  'Total Wind Purchases', 'Total Solar Purchases', 'Total Hydro Purchases', 'Total Bio Purchases',]

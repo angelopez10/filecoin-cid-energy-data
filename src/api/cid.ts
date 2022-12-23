@@ -1,13 +1,13 @@
 import axios from 'axios';
 export type AggregateType = {
-  miners: number,
-  totalEnergyConsuption: {
-    highBoundKw: number,
-    lowBoundKw: number,
-    estimateKw: number,
-  },
-  totalDataStored: number,
-  totalEnergyPurchasesByType: {[key:string]:number},
+	miners: number,
+	totalEnergyConsuption: {
+		highBoundKw: number,
+		lowBoundKw: number,
+		estimateKw: number,
+	},
+	totalDataStored: number,
+	totalEnergyPurchasesByType: { [key: string]: number },
 }
 export class CidAPI {
 	public static async get(cid: string) {
@@ -33,7 +33,7 @@ export class CidAPI {
 		} = await axios.get(
 			'https://provider-quest.s3.us-west-2.amazonaws.com/dist/geoip-lookups/synthetic-locations-latest.json',
 		);
-    let minersToReturn:any[] = []
+		let minersToReturn: any[] = []
 
 		for (const index in miners) {
 			const { data } = await axios.get(
@@ -46,9 +46,9 @@ export class CidAPI {
 					},
 				},
 			);
-      console.log({data})
+			console.log({ data })
 			if (data[0]) {
-				const minerId:string = data[0].MinerId;
+				const minerId: string = data[0].MinerId;
 				const geolocation = providerLocations.find(
 					({ provider }: any) => provider === minerId,
 				);
@@ -58,43 +58,42 @@ export class CidAPI {
 					...data[0],
 					...(geolocation || {}),
 				};
-			
 
-			const { data: energyData } = await axios.get(
-				`https://api.filgreen.d.interplanetary.one/models/export?code_name=TotalEnergyModelv_1_0_1&miner=${minerId}`,
-				{
-					headers: {
-						'Accept-Language': 'en-US,en;q=0.5',
-						'Accept-Encoding': 'gzip, deflate, br',
-						Connection: 'keep-alive',
+
+				const { data: energyData } = await axios.get(
+					`https://api.filgreen.d.interplanetary.one/models/export?code_name=TotalEnergyModelv_1_0_1&miner=${minerId}`,
+					{
+						headers: {
+							'Accept-Language': 'en-US,en;q=0.5',
+							'Accept-Encoding': 'gzip, deflate, br',
+							Connection: 'keep-alive',
+						},
 					},
-				},
-			);
+				);
 
-			const { data: energyDataArray } = energyData;
-			if (energyDataArray[0]) {
-				let highBoundKw = 0;
-				let lowBoundKw = 0;
-				let estimateKw = 0;
-				for (const item of energyDataArray) {
-					highBoundKw += Number(item.total_energy_kW_upper);
-					lowBoundKw += Number(item.total_energy_kW_lower);
-					estimateKw += Number(item.total_energy_kW_estimate);
+				const { data: energyDataArray } = energyData;
+				if (energyDataArray[0]) {
+					let highBoundKw = 0;
+					let lowBoundKw = 0;
+					let estimateKw = 0;
+					for (const item of energyDataArray) {
+						highBoundKw += Number(item.total_energy_kW_upper);
+						lowBoundKw += Number(item.total_energy_kW_lower);
+						estimateKw += Number(item.total_energy_kW_estimate);
+					}
+					minerToAdd = {
+						...minerToAdd,
+						energyConsumption: {
+							highBoundKw: +highBoundKw.toFixed(2),
+							lowBoundKw: +lowBoundKw.toFixed(2),
+							estimateKw: +estimateKw.toFixed(2),
+						},
+					};
 				}
-				minerToAdd = {
-					...minerToAdd,
-					energyConsumption: {
-						highBoundKw: +highBoundKw.toFixed(2),
-						lowBoundKw: +lowBoundKw.toFixed(2),
-						estimateKw: +estimateKw.toFixed(2),
-					},
-				};
-			}
 				const {
 					data: { contracts },
 				} = await axios.get(
-					`https://proofs-api.zerolabs.green/api/partners/filecoin/nodes/${
-						minerId
+					`https://proofs-api.zerolabs.green/api/partners/filecoin/nodes/${minerId
 					}/contracts`,
 					{
 						headers: {
@@ -141,7 +140,7 @@ export class CidAPI {
 						},
 					},
 				);
-          console.log({resData})
+				console.log({ resData })
 				const totalDataStored = resData[0].data.reduce(
 					(acc: any, current: { value: any }) => {
 						return acc + Number(current.value);
@@ -152,11 +151,11 @@ export class CidAPI {
 					...minerToAdd,
 					totalDataStored,
 				};
-        minersToReturn.push(minerToAdd)
+				minersToReturn.push(minerToAdd)
 			}
 		}
 
-		const aggregate:AggregateType = {
+		const aggregate: AggregateType = {
 			miners: 0,
 			totalEnergyConsuption: {
 				highBoundKw: 0,
@@ -167,24 +166,24 @@ export class CidAPI {
 			totalEnergyPurchasesByType: {},
 		};
 
-    minersToReturn.reduce((acc:AggregateType,current:any,index:number)=>{
-        acc.miners+=1
-        acc.totalEnergyConsuption.highBoundKw += current.energyConsumption?.highBoundKw || 0
-        acc.totalEnergyConsuption.lowBoundKw += current.energyConsumption?.lowBoundKw || 0
-        acc.totalEnergyConsuption.estimateKw += current.energyConsumption?.estimateKw || 0
-        acc.totalDataStored += current.totalDataStored
-        console.log({currentpurchases:current.purchasesByEnergySource})
-        for (const energyType of Object.keys(current.purchasesByEnergySource||{})){
-          if(!acc.totalEnergyPurchasesByType[energyType]){
-            acc.totalEnergyPurchasesByType[energyType] = current.purchasesByEnergySource[energyType]
-          }else{
-            acc.totalEnergyPurchasesByType[energyType] += current.purchasesByEnergySource[energyType]
-          }
-        }
-        return acc
-    },aggregate)
-    console.log({aggregate})
+		minersToReturn.reduce((acc: AggregateType, current: any, index: number) => {
+			acc.miners += 1
+			acc.totalEnergyConsuption.highBoundKw += current.energyConsumption?.highBoundKw || 0
+			acc.totalEnergyConsuption.lowBoundKw += current.energyConsumption?.lowBoundKw || 0
+			acc.totalEnergyConsuption.estimateKw += current.energyConsumption?.estimateKw || 0
+			acc.totalDataStored += current.totalDataStored
+			console.log({ currentpurchases: current.purchasesByEnergySource })
+			for (const energyType of Object.keys(current.purchasesByEnergySource || {})) {
+				if (!acc.totalEnergyPurchasesByType[energyType]) {
+					acc.totalEnergyPurchasesByType[energyType] = current.purchasesByEnergySource[energyType]
+				} else {
+					acc.totalEnergyPurchasesByType[energyType] += current.purchasesByEnergySource[energyType]
+				}
+			}
+			return acc
+		}, aggregate)
+		console.log({ aggregate })
 
-		return {miners:minersToReturn,aggregate};
+		return { miners: minersToReturn, aggregate };
 	}
 }
