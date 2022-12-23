@@ -9,17 +9,16 @@ export type AggregateType = {
 	totalDataStored: number,
 	totalEnergyPurchasesByType: { [key: string]: number },
 }
+const CORS_HEADERS =  {
+	'Accept-Language': 'en-US,en;q=0.5',
+	'Accept-Encoding': 'gzip, deflate, br',
+	Connection: 'keep-alive',
+}
 export class CidAPI {
 	public static async get(cid: string) {
 		console.log({ cid });
 		const { data } = await axios.get(`https://cid.contact/cid/${cid}`, {
-			headers: {
-				'Accept-Language': 'en-US,en;q=0.5',
-				'Accept-Encoding': 'gzip, deflate, br',
-				Origin: 'https://cid.place',
-				Connection: 'keep-alive',
-				Referer: 'https://cid.place/',
-			},
+			headers:CORS_HEADERS
 		});
 		const miners = data?.MultihashResults[0]?.ProviderResults.map(
 			({ Provider }: any) => ({
@@ -32,19 +31,18 @@ export class CidAPI {
 			data: { providerLocations },
 		} = await axios.get(
 			'https://provider-quest.s3.us-west-2.amazonaws.com/dist/geoip-lookups/synthetic-locations-latest.json',
+			{
+				headers:CORS_HEADERS
+			}
+
 		);
 		let minersToReturn: any[] = []
 
 		for (const index in miners) {
 			const { data } = await axios.get(
-				`https://green.filecoin.space/minerid-peerid/api/v1/miner-id?peer_id=${miners[index].peerId}`,
-				{
-					headers: {
-						'Accept-Language': 'en-US,en;q=0.5',
-						'Accept-Encoding': 'gzip, deflate, br',
-						Connection: 'keep-alive',
-					},
-				},
+				`https://green.filecoin.space/minerid-peerid/api/v1/miner-id?peer_id=${miners[index].peerId}`, {
+					headers:CORS_HEADERS
+				}
 			);
 			console.log({ data })
 			if (data[0]) {
@@ -63,12 +61,8 @@ export class CidAPI {
 				const { data: energyData } = await axios.get(
 					`https://api.filgreen.d.interplanetary.one/models/export?code_name=TotalEnergyModelv_1_0_1&miner=${minerId}`,
 					{
-						headers: {
-							'Accept-Language': 'en-US,en;q=0.5',
-							'Accept-Encoding': 'gzip, deflate, br',
-							Connection: 'keep-alive',
-						},
-					},
+						headers:CORS_HEADERS
+					}
 				);
 
 				const { data: energyDataArray } = energyData;
@@ -96,12 +90,8 @@ export class CidAPI {
 					`https://proofs-api.zerolabs.green/api/partners/filecoin/nodes/${minerId
 					}/contracts`,
 					{
-						headers: {
-							'Accept-Language': 'en-US,en;q=0.5',
-							'Accept-Encoding': 'gzip, deflate, br',
-							Connection: 'keep-alive',
-						},
-					},
+						headers:CORS_HEADERS
+					}
 				);
 				console.log({ contracts });
 				if (!!contracts.length) {
@@ -133,12 +123,8 @@ export class CidAPI {
 				} = await axios.get(
 					`https://api.filecoin.energy/models/model?end=2022-12-06&filter=month&id=7&miner=${minerId}&start=2020-01-01`,
 					{
-						headers: {
-							'Accept-Language': 'en-US,en;q=0.5',
-							'Accept-Encoding': 'gzip, deflate, br',
-							Connection: 'keep-alive',
-						},
-					},
+						headers:CORS_HEADERS
+					}
 				);
 				console.log({ resData })
 				const totalDataStored = resData[0].data.reduce(
