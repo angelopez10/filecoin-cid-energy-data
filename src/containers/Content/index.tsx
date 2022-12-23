@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Tab } from "../../components/layout/Tab";
-import { Container } from "./Content.styles";
+import { AggregateAndTabContent, Container } from "./Content.styles";
 import Map from "../../components/layout/Map";
+import { AggregateData } from '../../components/layout/AggregateData';
+import { MinerList } from '../../components/layout/MinerList';
 
 export type ActiveTabsType = "list" | "map";
 
@@ -15,7 +17,15 @@ export function Content({ data }: any) {
   return (
     <Container>
       <Tab active={active} toggleTab={toggleTab} />
-      {active === "map" && <Map data={data} />}
+      <AggregateAndTabContent>
+      {data?.aggregate && data?.miners && 
+        <>
+          <AggregateData data={data?.aggregate}/>
+          {active === "list" && <MinerList miners={data?.miners} />}
+          {active === "map" && <Map data={data} />}
+        </>
+      }
+      </AggregateAndTabContent>
     </Container>
   );
 }

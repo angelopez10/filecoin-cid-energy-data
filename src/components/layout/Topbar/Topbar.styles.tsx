@@ -22,6 +22,13 @@ export const LogoContainer = styled.div`
   border: 3px solid #000;
   font-size: 1.5rem;
   font-weight: bold;
+
+  @media screen and (max-width: ${({
+  theme: {
+    breakPoints: { superLarge },
+  } }) => superLarge}) {
+    width: 110px;
+  };
 `;
 
 export const LogoCid = styled.div`
@@ -31,6 +38,13 @@ export const LogoCid = styled.div`
   padding: 0.25rem 1rem;
   min-width: 5rem;
   text-transform: uppercase;
+
+  @media screen and (max-width: ${({
+  theme: {
+    breakPoints: { superLarge },
+  } }) => superLarge}) {
+    width: 100%;
+  };
 `;
 
 export const LogoPlace = styled.div`
@@ -40,6 +54,13 @@ export const LogoPlace = styled.div`
   padding: 0.25rem 1rem;
   min-width: 5rem;
   text-transform: capitalize;
+
+  @media screen and (max-width: ${({
+  theme: {
+    breakPoints: { superLarge },
+  } }) => superLarge}) {
+    width: 100%;
+  };
 `;
 
 export const ThemeIcon = styled.div`

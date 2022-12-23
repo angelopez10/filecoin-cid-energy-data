@@ -3,6 +3,7 @@ const colors = {
   black: "#000",
   primary: "#1ade7f",
   accent: "#253331",
+  lightGray: '#f3f3f3',
   darkGray: "#343434",
   font: {
     light: "slategray",

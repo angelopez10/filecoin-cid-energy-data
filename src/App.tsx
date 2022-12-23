@@ -13,23 +13,23 @@ function App() {
   const [cid, setCid] = useState("");
   const [error, setError] = useState("");
   const [data, setData] = useState({});
-  const [loading,setLoading] = useState(false)
+  const [loading, setLoading] = useState(false)
   const toggleTheme = () => {
     theme === "light" ? setTheme("dark") : setTheme("light");
   };
 
   const handleSubmit = async () => {
     try {
-      // const res = await CidAPI.get(cid);
-      setLoading(true)
-      const {miners} = await CidAPI.get(
+      setData({});
+      setLoading(true);
+      const response = await CidAPI.get(
        cid
       );
-      setData(miners);
-      console.log({ miners });
+      setData(response);
+      console.log({ response });
       setLoading(false)
     } catch (err) {
-      setError("Sorry, we didn't find any miners related to that CID :(");
+      setError("Sorry, an error occurred, try again later :(");
       console.log("handleSubmit err: ", err);
       setLoading(false)
     }
@@ -46,8 +46,7 @@ function App() {
         setError={setError}
         error={error}
       />
-      {loading && 'loading...'}
-      <MainLayout data={data} error={error} />
+      <MainLayout data={data} error={error} loading={loading}/>
     </ThemeProvider>
   );
 }

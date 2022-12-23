@@ -9,6 +9,13 @@ export const Container = styled.div`
   border-radius: 12px;
   border: 1px solid rgb(60, 63, 68);
   margin-top: 40px;
+
+  @media screen and (max-width: ${({
+  theme: {
+    breakPoints: { superLarge },
+  } }) => superLarge}) {
+    width: 70%;
+  };
 `;
 
 export const SingleTab = styled.div<{ active?: boolean }>`
