@@ -13,6 +13,7 @@ export function Content({ data }: any) {
   function toggleTab(tab: ActiveTabsType) {
     setActive(tab);
   }
+  console.log({data})
 
   return (
     <Container>
@@ -22,7 +23,7 @@ export function Content({ data }: any) {
         <>
           <AggregateData data={data?.aggregate}/>
           {active === "list" && <MinerList miners={data?.miners} />}
-          {active === "map" && <Map data={data} />}
+          {active === "map" && <Map data={data?.miners} />}
         </>
       }
       </AggregateAndTabContent>

@@ -20,7 +20,7 @@ function Map({ data }: any) {
               <Marker position={[miner.lat, miner.long]} icon={LocationIcon}>
                 <Popup>
                   <PopUpTitle>Miner: {miner.minerId}</PopUpTitle>
-                  <PopUpParragraph>City: {miner.city}</PopUpParragraph>
+                 {!!miner.city &&  <PopUpParragraph>City: {miner.city}</PopUpParragraph>}
                   <PopUpParragraph>
                     High Bound: {miner.energyConsumption.highBoundKw} KW
                   </PopUpParragraph>
@@ -30,6 +30,9 @@ function Map({ data }: any) {
                   <PopUpParragraph>
                     Estimate: {miner.energyConsumption.estimateKw} KW
                   </PopUpParragraph>
+                  {!!miner.totalDataStored && <PopUpParragraph>
+                    Total data stored: {+(miner.totalDataStored/1024/1024).toFixed(2) } PiB
+                  </PopUpParragraph>}
                 </Popup>
               </Marker>
             )
