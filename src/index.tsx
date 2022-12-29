@@ -1,20 +1,19 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import { BrowserRouter, Route, Router, Routes } from "react-router-dom";
+import {HashRouter, Navigate, Route, Routes } from "react-router-dom";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-
+    <HashRouter >
     <Routes>
     <Route path="/:cid?/*" element={<App />} />
-    
+    <Route path="*" element={<Navigate to="/"/>} />
     </Routes>
-    </BrowserRouter>
+    </HashRouter>
 
   </React.StrictMode>
 );

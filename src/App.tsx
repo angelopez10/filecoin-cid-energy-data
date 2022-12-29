@@ -7,7 +7,7 @@ import MainLayout from "./containers/MainLayout";
 import { darkTheme } from "./theme/darkTheme";
 import { GlobalStyle } from "./theme/GlobalStyles";
 import { lightTheme } from "./theme/lightTheme";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 function App() {
   const [theme, setTheme] = useState<"light" | "dark">("dark");
@@ -19,11 +19,10 @@ function App() {
     theme === "light" ? setTheme("dark") : setTheme("light");
   };
   const params = useParams()
-
-
+  const navigate = useNavigate()
   useEffect(()=>{
+    console.log({params})
     if(params?.cid){
-      console.log({params})
       setCid(params.cid)
       handleSubmit(params.cid)
     }
@@ -34,6 +33,7 @@ function App() {
   const handleSubmit = async (cidToUse:string=null) => {
     try {
       setData({});
+      navigate(`/${cid||cidToUse}`)
       setLoading(true);
       const response = await CidAPI.get(
         cid || cidToUse
