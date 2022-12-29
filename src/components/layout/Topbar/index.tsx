@@ -13,6 +13,7 @@ import {
 } from "./Topbar.styles";
 
 interface TopbarProps {
+  value:string;
   theme: "light" | "dark";
   toggleTheme: () => void;
   setCid: (cid: string) =>  void;
@@ -21,7 +22,7 @@ interface TopbarProps {
   error?: string;
 }
 
-function Topbar({ theme, toggleTheme, setCid, handleSubmit, setError, error }: TopbarProps) {
+function Topbar({ theme, toggleTheme, setCid, handleSubmit, setError, error,value}: TopbarProps) {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setCid(e.target.value);
     if(error) setError('');
@@ -37,6 +38,7 @@ function Topbar({ theme, toggleTheme, setCid, handleSubmit, setError, error }: T
         <Input
           placeholder="Place your Filecoin CID here"
           onChange={(e) => handleChange(e)}
+          value={value}
         />
         <Button onClick={handleSubmit}>Search</Button>
       </InputContainer>

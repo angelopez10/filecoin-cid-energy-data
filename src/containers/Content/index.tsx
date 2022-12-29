@@ -13,7 +13,6 @@ export function Content({ data }: any) {
   function toggleTab(tab: ActiveTabsType) {
     setActive(tab);
   }
-  console.log({data})
 
   return (
     <Container>

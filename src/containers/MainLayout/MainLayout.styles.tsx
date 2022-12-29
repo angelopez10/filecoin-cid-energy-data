@@ -39,6 +39,7 @@ export const StyledLoader = styled(Loader)`
 
 export const ErrorText = styled(LoadingText)`
   font-size: 48px;
+  margin:.5rem;
   color: ${({theme: {colors: {font}}}) => font};
   @media screen and (max-width: ${({
       theme: {
